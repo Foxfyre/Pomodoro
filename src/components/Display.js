@@ -4,27 +4,48 @@ import "../css/clock.css"
 class Display extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      break: 5,
-      session: 25,
-      timerH: 25
-    }
   }
   // span with className will have to change on toggle to pause-img
   render() {
+    let button;
+    if (this.props.nextOp === "Start") {
+      button = <button
+        id="start_stop"
+        className="start-stop"
+        onClick={this.props.onClickStart}
+      >
+        <span className="display-text">{this.props.nextOp}</span>
+      </button>
+    } else if (this.props.nextOp === "Stop") {
+      button = <button
+        id="start_stop"
+        className="start-stop"
+        onClick={this.props.onClickStop}
+      >
+        <span className="display-text">{this.props.nextOp}</span>
+      </button>
+    }
+
     return (
       <div className="display-container">
         <div className="start-stop-reset-container">
-          <button id="start_stop" className="start-stop">
-            <span className="start-img"></span>
-          </button>
-          <button id="reset" className="reset">
+          {button}
+          <button
+            id="reset"
+            className="reset"
+            onClick={this.props.onClickReset}
+          >
             <span className="display-text">Restart</span>
           </button>
         </div>
         <div className="display">
-          <span id="timer-label" className="time-digit">Session</span>
-          <span id="time-left" className="time-digit">25:00</span>
+          <span id="timer-label" className="time-digit">{this.props.currentFunction}</span>
+          <span
+            id="time-left"
+            className="time-digit"
+          >
+            {this.props.timerM}:{this.props.timerS}
+          </span>
         </div>
       </div>
     );
