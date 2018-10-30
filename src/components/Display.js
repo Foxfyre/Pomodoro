@@ -44,7 +44,7 @@ class Display extends Component {
             id="time-left"
             className="time-digit"
           >
-            {this.props.timerM}:{this.props.timerS}
+            {this.props.timerDisplay}
           </span>
         </div>
         <div>
@@ -53,6 +53,7 @@ class Display extends Component {
             src="http://www.peter-weinberg.com/files/1014/8073/6015/BeepSound.wav"
           />
         </div>
+        <div className="foot-text"><span>Developed by Charlotte Hamilton / @charlotte_coder</span></div>
       </div>
     );
   }

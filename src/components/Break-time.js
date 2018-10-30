@@ -12,7 +12,7 @@ class BreakTime extends Component {
       <div className="break-time-container">
         <div className="break-time-display">
           <span id="break-label" className="name-text">Break Length</span><br />
-          <span id="break-length" className="time-digit">{this.props.break}</span>
+          <span id="break-length" className="time-digit">{this.props.lengthB}</span>
         </div>
         <div className="break-time-updown-cont">
           <button

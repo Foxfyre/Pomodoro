@@ -9,14 +9,16 @@ class Clock extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      break: 5,
-      timerM: 25,
-      timerS: "00",
+      breakSeconds: 300,
+      timerDisplay: "25:00",
+      timerSeconds: 1500,
       nextOp: "",
       currentFunction: "Session",
-      lengthS: 25
+      lengthS: 25,
+      lengthB: 5,
     };
     this.tick = this.tick.bind(this);
+    this.displayFormat = this.displayFormat.bind(this);
     this.secondsRemaining;
     this.intervalHandle;
   }
@@ -25,7 +27,8 @@ class Clock extends Component {
     if (this.state.lengthS < 60) {
       this.setState({
         lengthS: this.state.lengthS + 1,
-        timerM: this.state.lengthS + 1
+        timerSeconds: (this.state.lengthS + 1) * 60,
+        timerDisplay: this.state.lengthS + 1 + ":00"
       });
     }
   }
@@ -34,52 +37,47 @@ class Clock extends Component {
     if (this.state.lengthS > 1) {
       this.setState({
         lengthS: this.state.lengthS - 1,
-        timerM: this.state.lengthS - 1
+        timerSeconds: (this.state.lengthS - 1) * 60,
+        timerDisplay: this.state.lengthS - 1 + ":00"
       });
     }
   }
 
   onClickBreakInc() {
-    /*this.state.break > 9 ? this.setState({ break: 0 + this.state.break + 1})
-      : this.setState({ break: this.state.break + 1 })*/
-
-    if (this.state.break < 60) {
+    if (this.state.lengthB < 60) {
       this.setState({
-        break: this.state.break + 1
+        lengthB: this.state.lengthB + 1,
+        breakSeconds: (this.state.lengthB + 1) * 60,
       });
     }
   }
 
   onClickBreakDec() {
-    if (this.state.break > 1) {
+    if (this.state.lengthB > 1) {
       this.setState({
-        break: this.state.break - 1
+        lengthB: this.state.lengthB - 1,
+        breakSeconds: (this.state.lengthB - 1) * 60,
       });
     }
   }
 
   startCountDown() {
-    let time;
     if (this.state.currentFunction === "Break") {
-      time = this.state.lengthS;
+      this.secondsRemaining = this.state.lengthS * 60;
     } else {
-      time = this.state.timerM;
+      this.secondsRemaining = this.state.timerSeconds;
     }
-
     this.setState({
       nextOp: "Stop",
       currentFunction: "Session"
     });
     this.intervalHandle = setInterval(this.tick, 1000);
-    let seconds = parseInt(this.state.timerS);
-    this.secondsRemaining = time * 60 + seconds;
   }
 
   stopCountDown() {
     this.setState({
       nextOp: "Start",
-      timerM: this.state.timerM,
-      timerS: this.state.timerS
+      timerSeconds: this.secondsRemaining,
     });
     clearInterval(this.intervalHandle);
   }
@@ -89,20 +87,19 @@ class Clock extends Component {
       nextOp: "Stop",
       currentFunction: "Break"
     });
+    this.secondsRemaining = this.state.breakSeconds;
     this.intervalHandle = setInterval(this.tick, 1000);
-    let time = parseInt(this.state.break);
-    let seconds = 0;
-    this.secondsRemaining = time * 60 + seconds;
   }
 
   reset() {
     this.setState({
-      break: 5,
-      timerM: this.state.lengthS,
-      lengthS: 25,
-      timerS: "00",
+      breakSeconds: 300,
+      timerDisplay: "25:00",
+      timerSeconds: 1500,
       nextOp: "",
-      currentFunction: "Session"
+      currentFunction: "Session",
+      lengthS: 25,
+      lengthB: 5
     });
     document.getElementById("beep").pause();
     document.getElementById("beep").currentTime = 0;
@@ -111,30 +108,14 @@ class Clock extends Component {
 
   playAudio() {
     const audio = document.getElementById("beep");
-    //audio.load();
     audio.play();
   };
 
   tick() {
     let min = Math.floor(this.secondsRemaining / 60);
-    let sec = this.secondsRemaining - min * 60;
+    let sec = this.secondsRemaining % 60;
 
-    this.setState({
-      timerM: min,
-      timerS: sec
-    });
-
-    if (sec < 10) {
-      this.setState({
-        timerS: "0" + this.state.timerS
-      });
-    }
-
-    if (min < 10) {
-      this.setState({
-        timerM: "0" + this.state.timerM
-      });
-    }
+    this.secondsRemaining--;
 
     if (min === 0 && sec === 0) {
       this.playAudio();
@@ -145,10 +126,23 @@ class Clock extends Component {
         this.startCountDown();
       }
     }
+    this.displayFormat(this.secondsRemaining);
+  }
 
-    this.secondsRemaining--;
+  displayFormat(seconds) {
+    let min = Math.floor(seconds / 60);
+    let sec = seconds % 60;
 
+    if (sec < 10) {
+      sec = "0" + sec;
+    }
+    if (min < 10) {
+      min = "0" + min;
+    }
 
+    this.setState({
+      timerDisplay: min + ":" + sec,
+    });
   }
 
   render() {
@@ -162,14 +156,13 @@ class Clock extends Component {
         <BreakTime
           incrementBreak={this.onClickBreakInc.bind(this)}
           decrementBreak={this.onClickBreakDec.bind(this)}
-          break={this.state.break}
+          lengthB={this.state.lengthB.toString()}
         />
         <Display
           onClickStart={(this.startCountDown = this.startCountDown.bind(this))}
           onClickStop={(this.stopCountDown = this.stopCountDown.bind(this))}
           onClickReset={(this.reset = this.reset.bind(this))}
-          timerM={this.state.timerM}
-          timerS={this.state.timerS}
+          timerDisplay={this.state.timerDisplay}
           nextOp={this.state.nextOp}
           currentFunction={this.state.currentFunction}
         />
