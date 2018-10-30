@@ -8,13 +8,13 @@ class Display extends Component {
   // span with className will have to change on toggle to pause-img
   render() {
     let button;
-    if (this.props.nextOp === "Start") {
+    if (this.props.nextOp === "Start" || this.props.nextOp === "") {
       button = <button
         id="start_stop"
         className="start-stop"
         onClick={this.props.onClickStart}
       >
-        <span className="display-text">{this.props.nextOp}</span>
+        <span className="display-text">Start</span>
       </button>
     } else if (this.props.nextOp === "Stop") {
       button = <button
@@ -22,7 +22,7 @@ class Display extends Component {
         className="start-stop"
         onClick={this.props.onClickStop}
       >
-        <span className="display-text">{this.props.nextOp}</span>
+        <span className="display-text">Stop</span>
       </button>
     }
 
@@ -46,6 +46,12 @@ class Display extends Component {
           >
             {this.props.timerM}:{this.props.timerS}
           </span>
+        </div>
+        <div>
+          <audio
+            id="beep"
+            src="http://www.peter-weinberg.com/files/1014/8073/6015/BeepSound.wav"
+          />
         </div>
       </div>
     );

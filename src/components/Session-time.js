@@ -12,7 +12,7 @@ class SessionTime extends Component {
       <div className="session-time-container">
         <div className="session-time-display">
           <span id="session-label" className="name-text">Session Length</span><br />
-          <span id="session-length" className="time-digit">{this.props.timerM}</span>
+          <span id="session-length" className="time-digit">{this.props.lengthS}</span>
         </div>
         <div className="session-time-updown-cont">
           <button
