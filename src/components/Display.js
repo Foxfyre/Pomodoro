@@ -53,7 +53,7 @@ class Display extends Component {
             src="http://www.peter-weinberg.com/files/1014/8073/6015/BeepSound.wav"
           />
         </div>
-        <div className="foot-text"><span>Developed by Charlotte Hamilton / @charlotte_coder</span></div>
+        <div className="foot-text"><span>Developed by Charlotte Hamilton / Twitter: @FoxyCoder22 / GitHub: Foxfyre</span></div>
       </div>
     );
   }
